@@ -10,6 +10,9 @@ This API was all developed in Java 8 and Spring Boot in order to demonstrate an 
 ## API documentation and Test of user
 Url :http://localhost:8080/weather-metrics/weather/data?city=london
 
+Swagger : http://localhost:8080/weather-metrics/swagger-ui.html
+
+
 Response 
 ```
 {
