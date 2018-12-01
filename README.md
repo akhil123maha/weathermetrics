@@ -16,8 +16,8 @@ Response
     "city": "london",
     "duration": "3 days",
     "averageTemperatureDaily": 8.83,
-    "averageTemperatureNightly": 8.779166666666667,
-    "averagePressure": 1009.9554166666667
+    "averageTemperatureNightly": 8.78,
+    "averagePressure": 1009.96
 }
 ```
 # Run and Test

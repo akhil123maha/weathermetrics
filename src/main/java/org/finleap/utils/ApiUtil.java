@@ -7,6 +7,8 @@ import org.finleap.model.WeatherForecast;
 import org.finleap.model.WeatherSummary;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -41,7 +43,7 @@ public class ApiUtil {
     }
 
     private static double getNightlyTemperatureAverage(WeatherForecast weatherForecast) {
-        return weatherForecast.getEntries().stream()
+        double nightlyTemperatureAverage = weatherForecast.getEntries().stream()
                 .filter(weatherEntry -> weatherEntry.getTimestamp().isBefore(Instant.now().plus(3, ChronoUnit.DAYS)))
                 .filter(weatherEntry -> {
                     LocalTime start = LocalTime.of(18, 0);  // 6 PM.
@@ -53,10 +55,12 @@ public class ApiUtil {
                     return false;
                 })
                 .mapToDouble(WeatherEntry::getTemperature).average().getAsDouble();
+
+        return roundedValue(nightlyTemperatureAverage);
     }
 
     private static double getDailyTemperatureAverage(WeatherForecast weatherForecast) {
-        return weatherForecast.getEntries().stream()
+        double dailyTemperatureAverage = weatherForecast.getEntries().stream()
                 .filter(weatherEntry -> weatherEntry.getTimestamp().isBefore(Instant.now().plus(3, ChronoUnit.DAYS)))
                 .filter(weatherEntry -> {
                     LocalTime start = LocalTime.of(6, 0);  // 6 AM.
@@ -68,11 +72,21 @@ public class ApiUtil {
                     return false;
                 })
                 .mapToDouble(WeatherEntry::getTemperature).average().getAsDouble();
+
+        return roundedValue(dailyTemperatureAverage);
     }
 
     private static double getPressureAverage(WeatherForecast weatherForecast) {
-        return weatherForecast.getEntries().stream()
+        double pressureAverage = weatherForecast.getEntries().stream()
                 .filter(weatherEntry -> weatherEntry.getTimestamp().isBefore(Instant.now().plus(3, ChronoUnit.DAYS)))
                 .mapToDouble(WeatherEntry::getPressure).average().getAsDouble();
+
+        return roundedValue(pressureAverage);
+    }
+
+    private static double roundedValue(double pressureAverage) {
+        BigDecimal bd = new BigDecimal(pressureAverage);
+        bd = bd.setScale(2, RoundingMode.HALF_EVEN);
+        return bd.doubleValue();
     }
 }
